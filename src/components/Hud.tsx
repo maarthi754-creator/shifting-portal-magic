@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Volume2, VolumeX, RotateCcw, Sparkles, Map } from "lucide-react";
 import { useGame } from "@/game/store";
 import { SECRETS } from "@/game/data";
+import { playSound } from "@/lib/sound";
 
 export function Hud({ showBack = true }: { showBack?: boolean }) {
   const { state, dragon, toggleSound, reset, totalRealms } = useGame();
@@ -37,14 +38,20 @@ export function Hud({ showBack = true }: { showBack?: boolean }) {
           </Link>
         )}
         <button
-          onClick={toggleSound}
+          onClick={() => {
+            playSound("ui", 0.35);
+            toggleSound();
+          }}
           aria-label="Toggle sound"
           className="glass grid h-9 w-9 place-items-center rounded-full text-foreground/80 transition hover:text-elem-glow"
         >
           {state.sound ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
         </button>
         <button
-          onClick={reset}
+          onClick={() => {
+            playSound("ui", 0.35);
+            reset();
+          }}
           aria-label="Reset the portal's memory"
           className="glass grid h-9 w-9 place-items-center rounded-full text-foreground/70 transition hover:text-destructive"
         >

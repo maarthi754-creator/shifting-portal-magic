@@ -7,6 +7,7 @@ import { Portal } from "@/components/Portal";
 import { PatientRune, DragonEgg, SigilRow } from "@/components/Secrets";
 import { PORTAL_TAUNTS, REALM_MAP, SECRETS } from "@/game/data";
 import { seeded, useGame } from "@/game/store";
+import { playSound } from "@/lib/sound";
 
 export const Route = createFileRoute("/portal")({
   head: () => ({
@@ -86,6 +87,7 @@ function PortalWorld() {
     .filter(Boolean) as string[];
 
   const go = (id: string) => {
+    playSound(state.visited.includes(id) ? "realm-return" : "realm-enter", 0.9);
     setLeaving(id);
     setTimeout(() => navigate({ to: "/realm/$realmId", params: { realmId: id } }), 900);
   };
@@ -151,22 +153,24 @@ function PortalWorld() {
             />
           </div>
 
-          {nodes.map((n) => (
-            <RealmNode
-              key={n.id + seed}
-              x={n.x}
-              y={n.y}
-              delay={n.delay}
-              visited={n.visited}
-              name={n.realm.name}
-              glyph={n.realm.glyph}
-              blurb={n.realm.blurb}
-              danger={n.realm.danger}
-              hidden={Boolean(n.realm.hidden)}
-              evasive={seeded(seed, n.id + "e") > 0.62}
-              onEnter={() => go(n.id)}
-            />
-          ))}
+          <AnimatePresence initial={false}>
+            {nodes.map((n) => (
+              <RealmNode
+                key={n.id}
+                x={n.x}
+                y={n.y}
+                delay={n.delay}
+                visited={n.visited}
+                name={n.realm.name}
+                glyph={n.realm.glyph}
+                blurb={n.realm.blurb}
+                danger={n.realm.danger}
+                hidden={Boolean(n.realm.hidden)}
+                evasive={seeded(seed, n.id + "e") > 0.62}
+                onEnter={() => go(n.id)}
+              />
+            ))}
+          </AnimatePresence>
 
           <div className="absolute -bottom-2 left-2">
             <PatientRune />
@@ -218,6 +222,7 @@ function PortalWorld() {
 
         <button
           onClick={() => {
+            playSound("ui", 0.35);
             pushFlash({
               kind: "taunt",
               title: "the portal considers it",
@@ -237,7 +242,7 @@ function PortalWorld() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] grid place-items-center bg-background/95"
+            className="realm-travel fixed inset-0 z-[60] grid place-items-center bg-background/95"
           >
             <motion.div
               initial={{ scale: 0.2, opacity: 0.3 }}
@@ -249,6 +254,19 @@ function PortalWorld() {
                   "radial-gradient(circle, var(--elem-glow), color-mix(in oklab, var(--elem) 60%, transparent) 45%, transparent 70%)",
               }}
             />
+            <div className="pointer-events-none absolute h-40 w-40 rounded-full realm-travel-ripple" />
+            <div className="pointer-events-none absolute h-40 w-40 rounded-full">
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <span
+                  key={i}
+                  className="realm-travel-particle"
+                  style={{
+                    "--travel-angle": `${i * 60 + 18}deg`,
+                    animationDelay: `${i * -0.12}s`,
+                  } as React.CSSProperties}
+                />
+              ))}
+            </div>
             <p className="absolute font-display text-sm tracking-[0.4em] text-background/90">
               {REALM_MAP[leaving]?.name.toUpperCase()}
             </p>
@@ -297,11 +315,12 @@ function RealmNode(props: NodeProps) {
     <motion.button
       initial={{ opacity: 0, scale: 0.6 }}
       animate={{ opacity: 1, scale: 1, x: dodge.x, y: dodge.y }}
+      exit={{ opacity: 0, scale: 0.72, x: dodge.x + (dodge.x >= 0 ? 24 : -24), y: dodge.y - 16 }}
       transition={{ delay: props.delay, type: "spring", stiffness: 180, damping: 18 }}
       whileHover={{ scale: 1.06 }}
       onPointerEnter={handleEnter}
       onClick={props.onEnter}
-      className="glass group absolute z-20 w-[186px] -translate-x-1/2 -translate-y-1/2 rounded-2xl p-4 text-left hover:elem-glow"
+      className={`glass group absolute z-20 w-[186px] -translate-x-1/2 -translate-y-1/2 rounded-2xl p-4 text-left hover:elem-glow ${props.visited ? "realm-node-visited" : ""}`}
       style={{
         left: `${props.x}%`,
         top: `${props.y}%`,

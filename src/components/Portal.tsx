@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { playSound } from "@/lib/sound";
 
 interface PortalProps {
   size?: number;
@@ -11,20 +12,84 @@ interface PortalProps {
 
 /** The living portal: layered rotating rings, plasma core, drifting runes. */
 export function Portal({ size = 320, label, intensity = 1, onClick, className = "" }: PortalProps) {
+  const portalRef = useRef<HTMLDivElement>(null);
+  const surgeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [activity, setActivity] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const [surging, setSurging] = useState(false);
   const runes = ["ᚠ", "ᚱ", "ᛉ", "ᛞ", "ᚨ", "ᛟ", "ᛊ", "ᚹ"];
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduceMotion.matches) return;
+    let frame = 0;
+    const updateActivity = (event: PointerEvent) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const bounds = portalRef.current?.getBoundingClientRect();
+        if (!bounds) return;
+        const dx = Math.max(bounds.left - event.clientX, 0, event.clientX - bounds.right);
+        const dy = Math.max(bounds.top - event.clientY, 0, event.clientY - bounds.bottom);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        setActivity(Math.max(0, 1 - distance / Math.max(size * 0.85, 1)));
+      });
+    };
+    window.addEventListener("pointermove", updateActivity, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", updateActivity);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [size]);
+
+  const handleClick = () => {
+    playSound("portal", 1);
+    onClick?.();
+    setSurging(true);
+    if (surgeTimerRef.current) clearTimeout(surgeTimerRef.current);
+    surgeTimerRef.current = setTimeout(() => setSurging(false), 1050);
+  };
+
+  useEffect(() => () => {
+    if (surgeTimerRef.current) clearTimeout(surgeTimerRef.current);
+  }, []);
+
   return (
     <motion.div
+      ref={portalRef}
       className={`relative select-none ${onClick ? "cursor-pointer" : ""} ${className}`}
       style={{ width: size, height: size }}
       whileHover={{ scale: onClick ? 1.04 : 1 }}
-      onClick={() => onClick?.()}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      onClick={handleClick}
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
     >
+      <div
+        className={`pointer-events-none absolute inset-[-12%] rounded-full portal-energy-halo ${surging ? "portal-energy-surge" : ""}`}
+        style={{ "--portal-activity": Math.min(1, activity + (hovered ? 0.45 : 0)) } as CSSProperties}
+      />
+      <div className="pointer-events-none absolute inset-[-5%] rounded-full portal-edge-ripple" />
+      <div
+        className="pointer-events-none absolute inset-[-16%] rounded-full portal-pull-field"
+        style={{ "--portal-activity": Math.min(1, activity + (hovered ? 0.45 : 0)) } as CSSProperties}
+      >
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <span
+            key={i}
+            className="portal-pull-particle"
+            style={{
+              "--particle-angle": `${i * 60 + 12}deg`,
+              "--particle-distance": `${size * (0.22 + (i % 3) * 0.08)}px`,
+              animationDelay: `${i * -1.7}s`,
+            } as CSSProperties}
+          />
+        ))}
+      </div>
       {/* outer aura */}
       <div
-        className="absolute inset-[-22%] rounded-full blur-3xl animate-breathe"
+        className={`absolute inset-[-22%] rounded-full blur-3xl animate-breathe ${surging ? "portal-aura-surge" : ""}`}
         style={{
           background:
             "radial-gradient(circle, color-mix(in oklab, var(--elem-glow) 45%, transparent), transparent 65%)",

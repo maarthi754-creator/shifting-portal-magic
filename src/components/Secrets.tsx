@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { useGame } from "@/game/store";
+import { playSound } from "@/lib/sound";
 
 /** SECRET 1 — hold a hover on the rune for 2 seconds. */
 export function PatientRune({ className = "" }: { className?: string }) {
@@ -16,6 +17,7 @@ export function PatientRune({ className = "" }: { className?: string }) {
         if (p >= 100) {
           if (timer.current) clearInterval(timer.current);
           timer.current = null;
+          playSound("unlock", 0.7);
           unlockSecret("rune-vigil");
           return 100;
         }
@@ -34,10 +36,12 @@ export function PatientRune({ className = "" }: { className?: string }) {
     <button
       onPointerEnter={start}
       onPointerLeave={stop}
-      onClick={() =>
-        !found &&
-        pushFlash({ kind: "taunt", title: "the rune", body: "Clicking it does nothing. Waiting might." })
-      }
+      onClick={() => {
+        if (!found) {
+          playSound("ui", 0.3);
+          pushFlash({ kind: "taunt", title: "the rune", body: "Clicking it does nothing. Waiting might." });
+        }
+      }}
       aria-label="A mysterious rune"
       className={`group relative grid h-14 w-14 place-items-center rounded-full ${className}`}
       style={{ opacity: found ? 1 : 0.55 }}
@@ -85,6 +89,7 @@ export function SigilRow({ className = "" }: { className?: string }) {
 
   const click = (id: string) => {
     if (found) return;
+    playSound("ui", 0.3);
     const next = [...seq, id];
     const ok = ORDER.slice(0, next.length).every((v, i) => v === next[i]);
     if (!ok) {
@@ -95,6 +100,7 @@ export function SigilRow({ className = "" }: { className?: string }) {
     if (next.length === ORDER.length) {
       setSeq([]);
       unlockSecret("sigil-sequence");
+      playSound("secret", 0.8);
       return;
     }
     setSeq(next);
@@ -127,14 +133,34 @@ export function SigilRow({ className = "" }: { className?: string }) {
 export function DragonEgg({ className = "" }: { className?: string }) {
   const { state, unlockSecret } = useGame();
   const [hovered, setHovered] = useState(false);
+  const [hatchStage, setHatchStage] = useState<"idle" | "cracking" | "opening" | "hatched">("idle");
+  const hatchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const found = state.secrets.includes("egg");
+
+  const hatch = () => {
+    if (hatchStage !== "idle") return;
+    playSound("unlock", 0.8);
+    setHatchStage("cracking");
+    hatchTimer.current = setTimeout(() => setHatchStage("opening"), 420);
+    setTimeout(() => setHatchStage("hatched"), 1050);
+  };
+
+  useEffect(() => () => {
+    if (hatchTimer.current) clearTimeout(hatchTimer.current);
+  }, []);
 
   return (
     <div
-      className={`relative ${className}`}
+      className={`relative egg-hatch-zone ${className}`}
+      data-hatch-stage={hatchStage}
+      onClick={hatch}
       onPointerEnter={() => {
         setHovered(true);
-        if (!found) setTimeout(() => unlockSecret("egg"), 700);
+        if (!found)
+          setTimeout(() => {
+            playSound("unlock", 0.65);
+            unlockSecret("egg");
+          }, 700);
       }}
       onPointerLeave={() => setHovered(false)}
     >
@@ -149,7 +175,22 @@ export function DragonEgg({ className = "" }: { className?: string }) {
             ? "0 0 40px -6px color-mix(in oklab, var(--elem-glow) 80%, transparent)"
             : "none",
         }}
-      />
+      >
+        <span className="egg-crack egg-crack-one" />
+        <span className="egg-crack egg-crack-two" />
+        <span className="egg-crack egg-crack-three" />
+      </motion.div>
+      <span className="egg-inner-glow" aria-hidden="true" />
+      <motion.span
+        className="egg-hatch-dragon"
+        initial={{ opacity: 0, y: 22, scale: 0.55 }}
+        animate={hatchStage === "hatched" ? { opacity: 1, y: -22, scale: 1 } : { opacity: 0, y: 22, scale: 0.55 }}
+        transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
+        aria-hidden="true"
+      >
+        🐉
+      </motion.span>
+      <span className="egg-hatch-sparks" aria-hidden="true" />
       {hovered && (
         <motion.p
           initial={{ opacity: 0, y: 6 }}

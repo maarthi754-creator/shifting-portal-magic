@@ -6,6 +6,7 @@ import { Hud, FlashLayer } from "@/components/Hud";
 import { PatientRune, DragonEgg } from "@/components/Secrets";
 import { REALM_MAP } from "@/game/data";
 import { seeded, useGame } from "@/game/store";
+import { playSound } from "@/lib/sound";
 
 export const Route = createFileRoute("/realm/$realmId")({
   head: () => ({
@@ -91,7 +92,10 @@ function RealmPage() {
         <div className="glass relative z-10 rounded-2xl p-8 text-center">
           <p className="font-display text-elem-glow">THAT REALM NO LONGER EXISTS.</p>
           <button
-            onClick={() => navigate({ to: "/portal" })}
+            onClick={() => {
+              playSound("ui", 0.35);
+              navigate({ to: "/portal" });
+            }}
             className="mt-4 font-ui text-xs tracking-[0.3em] text-muted-foreground hover:text-elem-glow"
           >
             RETURN TO THE PORTAL
@@ -111,7 +115,7 @@ function RealmPage() {
       <FlashLayer />
 
       <div
-        className={`relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col px-6 pb-24 pt-28 ${
+        className={`${returning ? "realm-arrival-return" : "realm-arrival"} relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col px-6 pb-24 pt-28 ${
           layout === 0 ? "items-start text-left" : layout === 1 ? "items-center text-center" : "items-end text-right"
         }`}
       >
@@ -163,19 +167,23 @@ function RealmPage() {
 
         <div className="mt-6 flex flex-wrap gap-3">
           <button
-            onClick={() => navigate({ to: "/portal" })}
+            onClick={() => {
+              playSound("ui", 0.35);
+              navigate({ to: "/portal" });
+            }}
             className="glass elem-glow rounded-full px-8 py-3 font-display text-xs tracking-[0.3em] text-elem-glow transition hover:text-foreground"
           >
             RETURN TO THE PORTAL
           </button>
           <button
-            onClick={() =>
+            onClick={() => {
+              playSound("ui", 0.3);
               pushFlash({
                 kind: "taunt",
                 title: "deeper?",
                 body: "There is no deeper. That is what the last rider was told too.",
-              })
-            }
+              });
+            }}
             className="rounded-full border border-border/70 px-8 py-3 font-ui text-xs tracking-[0.3em] text-muted-foreground transition hover:border-elem hover:text-elem-glow"
           >
             GO DEEPER

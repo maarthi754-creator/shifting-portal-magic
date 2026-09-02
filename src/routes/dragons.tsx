@@ -6,6 +6,7 @@ import { Hud, FlashLayer } from "@/components/Hud";
 import { SigilRow, DragonEgg } from "@/components/Secrets";
 import { DRAGONS, REALM_MAP } from "@/game/data";
 import { useGame } from "@/game/store";
+import { playSound } from "@/lib/sound";
 
 export const Route = createFileRoute("/dragons")({
   head: () => ({
@@ -30,10 +31,13 @@ function DragonSelection() {
   const navigate = useNavigate();
   const { state, chooseDragon, pushFlash } = useGame();
   const [hovered, setHovered] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const secretUnlocked = state.secrets.includes("sigil-sequence");
   const roster = DRAGONS.filter((d) => !d.secret || secretUnlocked);
 
   const pick = (id: string) => {
+    playSound("dragon-select", 0.9);
+    setSelected(id);
     chooseDragon(id);
     pushFlash({
       kind: "omen",
@@ -74,10 +78,13 @@ function DragonSelection() {
               transition={{ delay: 0.1 * i, duration: 0.7 }}
               whileHover={{ y: -10, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onPointerEnter={() => setHovered(d.id)}
+              onPointerEnter={() => {
+                setHovered(d.id);
+                playSound("dragon-hover", 0.55);
+              }}
               onPointerLeave={() => setHovered(null)}
               onClick={() => pick(d.id)}
-              className="glass group relative overflow-hidden rounded-3xl p-6 text-left transition-shadow hover:elem-glow"
+              className={`glass group relative overflow-hidden rounded-3xl p-6 text-left transition-shadow hover:elem-glow ${selected === d.id ? "dragon-bonding" : ""}`}
             >
               <div
                 className="absolute inset-x-0 -top-24 h-48 opacity-60 blur-3xl transition-opacity group-hover:opacity-100"

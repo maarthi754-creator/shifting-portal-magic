@@ -329,6 +329,239 @@ h3,
     stroke-dashoffset: -400;
   }
 }
+@keyframes portal-energy-pulse {
+  0%,
+  100% {
+    opacity: calc(0.2 + var(--portal-activity) * 0.16);
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: calc(0.34 + var(--portal-activity) * 0.3);
+    transform: scale(1.025);
+  }
+}
+@keyframes portal-edge-ripple {
+  0%,
+  100% {
+    opacity: 0.16;
+    transform: scale(0.98);
+  }
+  45% {
+    opacity: 0.3;
+    transform: scale(1.012);
+  }
+  70% {
+    opacity: 0.08;
+    transform: scale(1.045);
+  }
+}
+@keyframes portal-pull {
+  0%,
+  100% {
+    opacity: 0;
+    transform: rotate(var(--particle-angle)) translateX(var(--particle-distance)) scale(0.6);
+  }
+  22% {
+    opacity: calc(0.28 + var(--portal-activity) * 0.35);
+  }
+  80% {
+    opacity: 0.08;
+    transform: rotate(var(--particle-angle)) translateX(8px) scale(1);
+  }
+}
+@keyframes portal-surge {
+  0% {
+    opacity: 0.25;
+    transform: scale(0.98);
+  }
+  22% {
+    opacity: 0.75;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+@keyframes realm-arrival {
+  from {
+    opacity: 0;
+    transform: translate3d(18px, 8px, 0);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+@keyframes realm-travel-ripple {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.7);
+  }
+}
+@keyframes realm-travel-particle {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--travel-angle)) translateX(18px) scale(0.5);
+  }
+  24% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--travel-angle)) translateX(150px) scale(0);
+  }
+}
+@keyframes realm-arrival-return {
+  from {
+    opacity: 0;
+    transform: translate3d(-14px, -6px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+@keyframes realm-node-visited {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--elem-glow) 0%, transparent);
+  }
+  35% {
+    box-shadow: 0 0 26px -8px color-mix(in oklab, var(--elem-glow) 70%, transparent);
+  }
+}
+@keyframes dragon-bonding {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--elem-glow) 0%, transparent);
+  }
+  35% {
+    box-shadow: 0 0 42px -8px color-mix(in oklab, var(--elem-glow) 80%, transparent);
+  }
+  65% {
+    box-shadow: 0 0 18px -8px color-mix(in oklab, var(--elem-glow) 45%, transparent);
+  }
+}
+@keyframes egg-hatch-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  20% {
+    transform: translateX(-2px) rotate(-3deg);
+  }
+  40% {
+    transform: translateX(2px) rotate(3deg);
+  }
+  60% {
+    transform: translateX(-1px) rotate(-2deg);
+  }
+  80% {
+    transform: translateX(1px) rotate(2deg);
+  }
+}
+@keyframes egg-hatch-open {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  35% {
+    transform: translateY(-2px) rotate(-7deg);
+  }
+  100% {
+    transform: translateY(4px) rotate(-13deg);
+  }
+}
+@keyframes egg-inner-glow {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  45% {
+    opacity: 0.78;
+    transform: scale(1.15);
+  }
+}
+@keyframes egg-hatch-sparks {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(0deg);
+  }
+  45% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2) rotate(35deg);
+  }
+}
+@keyframes egg-dragon-idle {
+  0%,
+  100% {
+    transform: translateY(-22px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-25px) rotate(2deg);
+  }
+}
+@keyframes ambient-fog {
+  0% {
+    transform: translate3d(-2%, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.5%, -0.8%, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(2%, 0.6%, 0) scale(1.01);
+  }
+}
+@keyframes ambient-fog-rev {
+  0% {
+    transform: translate3d(2%, 0.5%, 0) scale(1.01);
+  }
+  50% {
+    transform: translate3d(-1.5%, -0.6%, 0) scale(1.04);
+  }
+  100% {
+    transform: translate3d(-2%, 0, 0) scale(1);
+  }
+}
+@keyframes ambient-sweep {
+  0%,
+  100% {
+    opacity: 0.14;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.03);
+  }
+}
+@keyframes ambient-ember {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.85);
+    opacity: var(--ember-opacity);
+  }
+  22% {
+    transform: translate3d(calc(var(--ember-dx) * 0.22), calc(var(--ember-dy) * -0.18), 0) scale(0.98);
+  }
+  48% {
+    transform: translate3d(calc(var(--ember-dx) * 0.58), calc(var(--ember-dy) * 0.12), 0) scale(1.03);
+  }
+  74% {
+    transform: translate3d(calc(var(--ember-dx) * 0.84), calc(var(--ember-dy) * -0.5), 0) scale(0.95);
+  }
+}
 
 .animate-portal-spin {
   animation: portal-spin 22s linear infinite;
@@ -338,6 +571,159 @@ h3,
 }
 .animate-breathe {
   animation: portal-breathe 6s ease-in-out infinite;
+}
+.portal-energy-halo {
+  background: radial-gradient(circle, transparent 54%, color-mix(in oklab, var(--elem-glow) 32%, transparent) 68%, transparent 78%);
+  filter: blur(7px);
+  opacity: calc(0.2 + var(--portal-activity) * 0.16);
+  animation: portal-energy-pulse 8.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+.portal-edge-ripple {
+  border: 1px solid color-mix(in oklab, var(--elem-glow) 38%, transparent);
+  filter: blur(1.5px);
+  animation: portal-edge-ripple 11s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+.portal-pull-field {
+  animation: portal-spin-rev 48s linear infinite;
+}
+.portal-pull-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--elem-glow);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--elem-glow) 80%, transparent);
+  animation: portal-pull 8s cubic-bezier(0.42, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+.portal-aura-surge,
+.portal-energy-surge {
+  animation: portal-surge 1.05s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.realm-arrival {
+  animation: realm-arrival 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  will-change: transform, opacity, filter;
+}
+.realm-arrival-return {
+  animation: realm-arrival-return 820ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  will-change: transform, opacity, filter;
+}
+.realm-node-visited {
+  animation: realm-node-visited 1.2s ease-out both;
+}
+.dragon-bonding {
+  animation: dragon-bonding 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.egg-hatch-zone {
+  isolation: isolate;
+  cursor: pointer;
+}
+.egg-hatch-zone[data-hatch-stage="cracking"] > :first-child {
+  animation: egg-hatch-shake 420ms ease-in-out both;
+}
+.egg-hatch-zone[data-hatch-stage="opening"] > :first-child,
+.egg-hatch-zone[data-hatch-stage="hatched"] > :first-child {
+  animation: egg-hatch-open 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.egg-crack {
+  position: absolute;
+  z-index: 2;
+  width: 1px;
+  height: 17px;
+  background: color-mix(in oklab, var(--elem-glow) 80%, white 20%);
+  box-shadow: 0 0 6px color-mix(in oklab, var(--elem-glow) 75%, transparent);
+  opacity: 0;
+  transform-origin: top center;
+}
+.egg-crack-one {
+  left: 22px;
+  top: 17px;
+  transform: rotate(24deg);
+}
+.egg-crack-two {
+  left: 28px;
+  top: 28px;
+  height: 13px;
+  transform: rotate(-34deg);
+}
+.egg-crack-three {
+  left: 17px;
+  top: 35px;
+  height: 11px;
+  transform: rotate(52deg);
+}
+.egg-hatch-zone[data-hatch-stage="cracking"] .egg-crack-one,
+.egg-hatch-zone[data-hatch-stage="opening"] .egg-crack-one,
+.egg-hatch-zone[data-hatch-stage="hatched"] .egg-crack-one {
+  opacity: 1;
+}
+.egg-hatch-zone[data-hatch-stage="opening"] .egg-crack-two,
+.egg-hatch-zone[data-hatch-stage="hatched"] .egg-crack-two {
+  opacity: 1;
+}
+.egg-hatch-zone[data-hatch-stage="hatched"] .egg-crack-three {
+  opacity: 1;
+}
+.egg-inner-glow {
+  position: absolute;
+  inset: 12px 8px;
+  z-index: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--elem-glow) 85%, white 10%), transparent 70%);
+  filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+}
+.egg-hatch-zone[data-hatch-stage="cracking"] .egg-inner-glow,
+.egg-hatch-zone[data-hatch-stage="opening"] .egg-inner-glow {
+  animation: egg-inner-glow 900ms ease-out both;
+}
+.egg-hatch-dragon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  font-size: 1.45rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px color-mix(in oklab, var(--elem-glow) 75%, transparent));
+  pointer-events: none;
+}
+.egg-hatch-zone[data-hatch-stage="hatched"] .egg-hatch-dragon {
+  animation: egg-dragon-idle 3.2s ease-in-out 800ms infinite;
+}
+.egg-hatch-sparks {
+  position: absolute;
+  inset: 4px;
+  z-index: 2;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 35%, color-mix(in oklab, var(--elem-glow) 55%, transparent) 38%, transparent 42%);
+  opacity: 0;
+  pointer-events: none;
+}
+.egg-hatch-zone[data-hatch-stage="opening"] .egg-hatch-sparks {
+  animation: egg-hatch-sparks 900ms ease-out both;
+}
+.realm-travel-ripple {
+  border: 1px solid color-mix(in oklab, var(--elem-glow) 65%, transparent);
+  box-shadow: 0 0 28px color-mix(in oklab, var(--elem-glow) 55%, transparent);
+  animation: realm-travel-ripple 850ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  will-change: transform, opacity;
+}
+.realm-travel-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--elem-glow);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--elem-glow) 80%, transparent);
+  animation: realm-travel-particle 850ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  will-change: transform, opacity;
 }
 .animate-float-y {
   animation: float-y 7s ease-in-out infinite;
@@ -350,6 +736,21 @@ h3,
 }
 .animate-drift-slow {
   animation: drift 40s ease-in-out infinite alternate;
+}
+.animate-ambient-fog {
+  animation: ambient-fog 56s ease-in-out infinite alternate;
+}
+.animate-ambient-fog-rev {
+  animation: ambient-fog-rev 72s ease-in-out infinite alternate;
+}
+.animate-ambient-sweep {
+  animation: ambient-sweep 44s ease-in-out infinite alternate;
+}
+.animate-ambient-ember {
+  animation-name: ambient-ember;
+  animation-timing-function: cubic-bezier(0.42, 0, 0.2, 1);
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
 }
 
 @media (prefers-reduced-motion: reduce) {
