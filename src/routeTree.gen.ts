@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DragonsRouteImport } from './routes/dragons'
+import { Route as PortalRouteImport } from './routes/portal'
+import { Route as RealmRealmIdRouteImport } from './routes/realm.$realmId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DragonsRoute = DragonsRouteImport.update({
+  id: '/dragons',
+  path: '/dragons',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RealmRealmIdRoute = RealmRealmIdRouteImport.update({
+  id: '/realm/$realmId',
+  path: '/realm/$realmId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dragons': typeof DragonsRoute
+  '/portal': typeof PortalRoute
+  '/realm/$realmId': typeof RealmRealmIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dragons': typeof DragonsRoute
+  '/portal': typeof PortalRoute
+  '/realm/$realmId': typeof RealmRealmIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dragons': typeof DragonsRoute
+  '/portal': typeof PortalRoute
+  '/realm/$realmId': typeof RealmRealmIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/dragons' | '/portal' | '/realm/$realmId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/dragons' | '/portal' | '/realm/$realmId'
+  id: '__root__' | '/' | '/dragons' | '/portal' | '/realm/$realmId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DragonsRoute: typeof DragonsRoute
+  PortalRoute: typeof PortalRoute
+  RealmRealmIdRoute: typeof RealmRealmIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dragons': {
+      id: '/dragons'
+      path: '/dragons'
+      fullPath: '/dragons'
+      preLoaderRoute: typeof DragonsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/realm/$realmId': {
+      id: '/realm/$realmId'
+      path: '/realm/$realmId'
+      fullPath: '/realm/$realmId'
+      preLoaderRoute: typeof RealmRealmIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DragonsRoute: DragonsRoute,
+  PortalRoute: PortalRoute,
+  RealmRealmIdRoute: RealmRealmIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
