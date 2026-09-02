@@ -142,3 +142,222 @@
     color: var(--color-foreground);
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   THE DRAGON PORTAL — cinematic fantasy design system
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --background: oklch(0.11 0.035 275);
+  --foreground: oklch(0.95 0.02 280);
+  --card: oklch(0.16 0.045 278 / 0.6);
+  --card-foreground: oklch(0.95 0.02 280);
+  --popover: oklch(0.14 0.04 278);
+  --popover-foreground: oklch(0.95 0.02 280);
+  --primary: oklch(0.72 0.17 305);
+  --primary-foreground: oklch(0.12 0.03 280);
+  --secondary: oklch(0.24 0.06 280);
+  --secondary-foreground: oklch(0.94 0.02 280);
+  --muted: oklch(0.22 0.05 280);
+  --muted-foreground: oklch(0.7 0.04 285);
+  --accent: oklch(0.78 0.16 190);
+  --accent-foreground: oklch(0.12 0.03 280);
+  --destructive: oklch(0.62 0.23 25);
+  --destructive-foreground: oklch(0.97 0.01 280);
+  --border: oklch(0.85 0.08 300 / 0.16);
+  --input: oklch(0.85 0.08 300 / 0.2);
+  --ring: oklch(0.72 0.17 305);
+
+  /* elemental identity */
+  --elem: oklch(0.72 0.17 305);
+  --elem-soft: oklch(0.62 0.14 305);
+  --elem-glow: oklch(0.8 0.19 305);
+
+  --font-display: "Cinzel", "Georgia", serif;
+  --font-body: "Spectral", "Georgia", serif;
+  --font-ui: "Rajdhani", system-ui, sans-serif;
+}
+
+[data-elem="fire"] {
+  --elem: oklch(0.7 0.2 40);
+  --elem-soft: oklch(0.58 0.17 32);
+  --elem-glow: oklch(0.82 0.19 62);
+}
+[data-elem="ice"] {
+  --elem: oklch(0.8 0.13 210);
+  --elem-soft: oklch(0.66 0.12 225);
+  --elem-glow: oklch(0.9 0.11 200);
+}
+[data-elem="shadow"] {
+  --elem: oklch(0.62 0.17 300);
+  --elem-soft: oklch(0.45 0.14 300);
+  --elem-glow: oklch(0.74 0.19 310);
+}
+[data-elem="storm"] {
+  --elem: oklch(0.8 0.16 95);
+  --elem-soft: oklch(0.66 0.14 90);
+  --elem-glow: oklch(0.9 0.17 100);
+}
+[data-elem="void"] {
+  --elem: oklch(0.75 0.15 165);
+  --elem-soft: oklch(0.6 0.14 168);
+  --elem-glow: oklch(0.88 0.17 160);
+}
+
+@theme inline {
+  --color-elem: var(--elem);
+  --color-elem-soft: var(--elem-soft);
+  --color-elem-glow: var(--elem-glow);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-ui: var(--font-ui);
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--background) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--elem) 28%, transparent);
+  box-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.03) inset,
+    0 24px 70px -30px color-mix(in oklab, var(--elem) 55%, transparent);
+}
+
+@utility elem-glow {
+  box-shadow:
+    0 0 24px -4px color-mix(in oklab, var(--elem-glow) 60%, transparent),
+    0 0 70px -20px color-mix(in oklab, var(--elem) 70%, transparent);
+}
+
+@utility text-elem-glow {
+  color: var(--elem-glow);
+  text-shadow: 0 0 22px color-mix(in oklab, var(--elem-glow) 65%, transparent);
+}
+
+@utility starfield {
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, oklch(1 0 0 / 0.5), transparent),
+    radial-gradient(1px 1px at 70% 12%, oklch(1 0 0 / 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 45% 72%, oklch(1 0 0 / 0.35), transparent),
+    radial-gradient(1px 1px at 88% 60%, oklch(1 0 0 / 0.45), transparent),
+    radial-gradient(1px 1px at 12% 82%, oklch(1 0 0 / 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 60% 45%, oklch(1 0 0 / 0.3), transparent);
+  background-size: 900px 900px;
+}
+
+@keyframes portal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes portal-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes portal-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+@keyframes drift {
+  from {
+    transform: translateX(-12%);
+  }
+  to {
+    transform: translateX(12%);
+  }
+}
+@keyframes rune-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    filter: blur(0.3px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 0.72;
+  }
+  46% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.85;
+  }
+}
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -400;
+  }
+}
+
+.animate-portal-spin {
+  animation: portal-spin 22s linear infinite;
+}
+.animate-portal-spin-rev {
+  animation: portal-spin-rev 34s linear infinite;
+}
+.animate-breathe {
+  animation: portal-breathe 6s ease-in-out infinite;
+}
+.animate-float-y {
+  animation: float-y 7s ease-in-out infinite;
+}
+.animate-rune {
+  animation: rune-pulse 3.4s ease-in-out infinite;
+}
+.animate-flicker {
+  animation: flicker 6s ease-in-out infinite;
+}
+.animate-drift-slow {
+  animation: drift 40s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
