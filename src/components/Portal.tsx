@@ -16,8 +16,8 @@ export function Portal({ size = 320, label, intensity = 1, onClick, className = 
     <motion.div
       className={`relative select-none ${onClick ? "cursor-pointer" : ""} ${className}`}
       style={{ width: size, height: size }}
-      whileHover={onClick ? { scale: 1.04 } : undefined}
-      onClick={onClick}
+      whileHover={{ scale: onClick ? 1.04 : 1 }}
+      onClick={() => onClick?.()}
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
