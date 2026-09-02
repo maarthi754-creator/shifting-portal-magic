@@ -217,13 +217,14 @@ function PortalWorld() {
         </div>
 
         <button
-          onClick={() =>
+          onClick={() => {
             pushFlash({
               kind: "taunt",
               title: "the portal considers it",
               body: "Re-bonding costs you nothing. It costs the map everything.",
-            }) || navigate({ to: "/dragons" })
-          }
+            });
+            navigate({ to: "/dragons" });
+          }}
           className="mx-auto mt-10 block font-ui text-xs tracking-[0.3em] text-muted-foreground underline-offset-8 transition hover:text-elem-glow hover:underline"
         >
           CHANGE YOUR BOND
